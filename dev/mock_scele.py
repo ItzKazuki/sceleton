@@ -1,5 +1,5 @@
 """
-A fake SCeLE (Moodle) for developing and testing Sceleton without a real account.
+A fake E-Learning (Moodle) for developing and testing Sceleton without a real account.
 
     python3 dev/mock_scele.py            # every API function allowed
     python3 dev/mock_scele.py --limited  # course pages and grades only as HTML,
@@ -252,7 +252,7 @@ header b{{color:#0f6cbf;font-size:20px}} main{{max-width:960px;margin:0 auto;pad
 .section{{list-style:none;border-bottom:1px solid #dee2e6;padding:12px 0}} .activity{{list-style:none;padding:6px 0}}
 .btn{{background:#0f6cbf;color:#fff;border:0;padding:8px 16px;border-radius:6px}} table{{border-collapse:collapse}} td,th{{border:1px solid #dee2e6;padding:6px 10px}}
 .card{{border:1px solid #dee2e6;border-radius:8px;padding:16px;margin:12px 0}} img{{border-radius:8px}}</style></head>
-<body><header><b>SCeLE</b><span>Fakultas Ilmu Komputer UI (test server)</span>{user}</header><main>{body}</main></body></html>"""
+<body><header><b>E-Learning</b><span>Fakultas Ilmu Komputer UI (test server)</span>{user}</header><main>{body}</main></body></html>"""
 
 
 def page_course(cid):
@@ -302,7 +302,7 @@ def page_activity(mod, mid):
       <tr><th>Grading status</th><td>Not graded</td></tr><tr><th>Time remaining</th><td>See the due date above</td></tr></table>
       <p><button class="btn">Add submission</button></p></div>
       <p>Read the instructions in the attached PDF and submit a single zip file. Late submissions get a 10% penalty per day.</p>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='120'%3E%3Crect width='320' height='120' fill='%23ffd200'/%3E%3Ctext x='20' y='70' font-size='28' font-family='sans-serif'%3EUniversitas Indonesia%3C/text%3E%3C/svg%3E" alt="Banner">"""
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='120'%3E%3Crect width='320' height='120' fill='%23ffd200'/%3E%3Ctext x='20' y='70' font-size='28' font-family='sans-serif'%3EJakarta State Polytechnic%3C/text%3E%3C/svg%3E" alt="Banner">"""
 
 
 def page_my(sesskey):
@@ -310,7 +310,7 @@ def page_my(sesskey):
     return f"<h1>Dashboard</h1><div class='card'><h3>My courses</h3><ul>{items}</ul></div>"
 
 
-LOGIN_FORM = """<h1>Log in to SCeLE</h1><form method="post" action="/login/index.php" class="card" style="max-width:360px">
+LOGIN_FORM = """<h1>Log in to E-Learning</h1><form method="post" action="/login/index.php" class="card" style="max-width:360px">
 <input type="hidden" name="logintoken" value="tok-{token}">
 <p><label>Username<br><input name="username" id="username"></label></p>
 <p><label>Password<br><input name="password" id="password" type="password"></label></p>
@@ -440,5 +440,5 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print(f"Fake SCeLE on {BASE} ({'limited API' if LIMITED else 'full API'})")
+    print(f"Fake E-Learning on {BASE} ({'limited API' if LIMITED else 'full API'})")
     ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()

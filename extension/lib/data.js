@@ -1,11 +1,11 @@
-// Keeps the saved copy of your SCeLE data up to date.
+// Keeps the saved copy of your E-Learning data up to date.
 // Used by the background worker (every 30 minutes) and by the dashboard.
 
 import * as scele from './scele.js';
 import * as store from './store.js';
 import { now } from './util.js';
 
-// Runs `fn` over `items`, at most `limit` at a time, so we don't hammer SCeLE.
+// Runs `fn` over `items`, at most `limit` at a time, so we don't hammer E-Learning.
 async function pool(items, limit, fn) {
   const out = [];
   let i = 0;

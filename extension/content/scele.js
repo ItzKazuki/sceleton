@@ -1,6 +1,6 @@
-// Runs on scele.cs.ui.ac.id pages.
+// Runs on elearning.pnj.ac.id pages.
 //  1. Tells Sceleton when you log in, so it can sync right away.
-//  2. Optional dark mode for SCeLE.
+//  2. Optional dark mode for E-Learning.
 //  3. A live countdown in the corner of assignment and quiz pages.
 
 (() => {

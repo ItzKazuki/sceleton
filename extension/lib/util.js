@@ -155,7 +155,7 @@ export function buildIcs(events, reminderHours = [24, 3]) {
     return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
   };
   const icsEsc = (s) => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sceleton//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:SCeLE deadlines'];
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sceleton//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:E-Learning deadlines'];
   for (const e of events) {
     const summary = `[${e.course}] ${e.name}`;
     lines.push('BEGIN:VEVENT', `UID:sceleton-${e.id}@sceleton`, `DTSTAMP:${stamp(now())}`,
@@ -170,7 +170,7 @@ export function buildIcs(events, reminderHours = [24, 3]) {
   return lines.join('\r\n') + '\r\n';
 }
 
-// Pulls the course module id out of a SCeLE link like /mod/assign/view.php?id=123
+// Pulls the course module id out of a E-Learning link like /mod/assign/view.php?id=123
 export function cmidFromUrl(url) {
   const m = String(url || '').match(/\/mod\/\w+\/view\.php\?(?:.*&)?id=(\d+)/);
   return m ? Number(m[1]) : null;

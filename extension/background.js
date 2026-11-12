@@ -1,6 +1,6 @@
 // The part of Sceleton that runs in the background.
 //
-// Every 30 minutes it checks SCeLE, updates the number on the toolbar icon,
+// Every 30 minutes it checks E-Learning, updates the number on the toolbar icon,
 // sets up deadline reminders and tells you when something new shows up.
 
 import { syncCore, syncContents } from './lib/data.js';
@@ -24,7 +24,7 @@ function ensureOffscreen() {
       await chrome.offscreen.createDocument({
         url: 'offscreen/offscreen.html',
         reasons: ['DOM_PARSER'],
-        justification: 'Read SCeLE course pages to spot newly uploaded material',
+        justification: 'Read E-Learning course pages to spot newly uploaded material',
       });
     } catch (e) {
       if (!/single offscreen/i.test(String(e))) throw e;
@@ -192,7 +192,7 @@ async function updateBadge() {
   if (auth.status === 'loggedout') {
     await chrome.action.setBadgeText({ text: '!' });
     await chrome.action.setBadgeBackgroundColor({ color: '#7A8296' });
-    await chrome.action.setTitle({ title: 'Sceleton: log in to SCeLE to see your deadlines' });
+    await chrome.action.setTitle({ title: 'Sceleton: log in to E-Learning to see your deadlines' });
     return;
   }
   const visible = store.visibleEvents(events.list, done, settings);
@@ -220,7 +220,7 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
 
 // ------------------------------------------------------------ downloads
 
-// When we don't know a file's name in advance (it comes from SCeLE when the
+// When we don't know a file's name in advance (it comes from E-Learning when the
 // download starts), we remember which folder it should go into here.
 const pendingFolders = new Map();
 
@@ -233,7 +233,7 @@ chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
 
 async function downloadFiles(files) {
   const settings = await store.getSettings();
-  const root = safeName(settings.downloadFolder || 'SCeLE');
+  const root = safeName(settings.downloadFolder || 'E-Learning');
   const downloaded = await store.get('downloaded', {});
   let started = 0;
   for (const f of files) {
@@ -269,7 +269,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
         return serial(() => syncContents([c], { force: true }));
       })
       .then(() => reply({ ok: true }))
-      .catch((e) => reply({ ok: false, error: e.name === 'NotLoggedIn' ? 'You are logged out of SCeLE.' : e.message }));
+      .catch((e) => reply({ ok: false, error: e.name === 'NotLoggedIn' ? 'You are logged out of E-Learning.' : e.message }));
     return true;
   }
   if (msg.type === 'page-logged-in') {

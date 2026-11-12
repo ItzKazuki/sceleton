@@ -1,4 +1,4 @@
-// Makes a copy of the extension that talks to the fake SCeLE in dev/mock_scele.py
+// Makes a copy of the extension that talks to the fake E-Learning in dev/mock_scele.py
 // instead of the real one. Output: dev/build/extension
 //
 //   node dev/build-dev.mjs
@@ -17,15 +17,15 @@ rmSync(out, { recursive: true, force: true });
 cpSync(src, out, { recursive: true });
 
 const cfg = join(out, 'lib', 'config.js');
-writeFileSync(cfg, readFileSync(cfg, 'utf8').replace('https://scele.cs.ui.ac.id', MOCK));
+writeFileSync(cfg, readFileSync(cfg, 'utf8').replace('https://elearning.pnj.ac.id', MOCK));
 
 const manifestPath = join(out, 'manifest.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-const swap = (list) => list.map((m) => m.replace('https://scele.cs.ui.ac.id', MOCK));
+const swap = (list) => list.map((m) => m.replace('https://elearning.pnj.ac.id', MOCK));
 manifest.name = 'Sceleton (dev)';
 manifest.host_permissions = swap(manifest.host_permissions);
 manifest.content_scripts.forEach((c) => { c.matches = swap(c.matches); });
 manifest.web_accessible_resources.forEach((r) => { r.matches = swap(r.matches); });
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-console.log(`Dev build ready at ${out} (SCeLE = ${MOCK})`);
+console.log(`Dev build ready at ${out} (E-Learning = ${MOCK})`);

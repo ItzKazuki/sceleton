@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs the end-to-end test against the fake SCeLE, in both API modes.
+# Runs the end-to-end test against the fake E-Learning, in both API modes.
 #   bash dev/test.sh            both modes
 #   bash dev/test.sh --limited  only the HTML fallback mode
 set -u

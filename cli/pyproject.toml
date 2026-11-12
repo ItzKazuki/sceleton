@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scele-cli"
 version = "0.1.0"
-description = "SCeLE (Fasilkom UI's Moodle) in your terminal: deadlines, materials, announcements, grades"
+description = "E-Learning (Fasilkom UI's Moodle) in your terminal: deadlines, materials, announcements, grades"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = ["requests>=2.28", "rich>=13"]

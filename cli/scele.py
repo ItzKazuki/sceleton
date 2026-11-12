@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scele: a terminal companion for SCeLE (Fasilkom UI's Moodle).
+scele: a terminal companion for E-Learning (Fasilkom UI's Moodle).
 
 Run `scele` with no arguments for today's dashboard, or `scele --help`
 to see every command.
@@ -30,7 +30,7 @@ from rich.tree import Tree
 
 __version__ = "0.1.0"
 
-BASE_URL = os.environ.get("SCELE_URL", "https://scele.cs.ui.ac.id").rstrip("/")
+BASE_URL = os.environ.get("SCELE_URL", "https://elearning.pnj.ac.id").rstrip("/")
 TZ = timezone(timedelta(hours=7))  # Jakarta
 CONFIG_DIR = Path(os.environ.get("SCELE_HOME", Path.home() / ".config" / "scele"))
 CONFIG_FILE = CONFIG_DIR / "config.json"
@@ -115,7 +115,7 @@ def keychain_delete(user):
                        capture_output=True)
 
 
-# ---------------------------------------------------------------- talking to SCeLE
+# ---------------------------------------------------------------- talking to E-Learning
 
 def new_session():
     s = requests.Session()
@@ -147,7 +147,7 @@ def token_login(session, username, password):
     try:
         data = r.json()
     except ValueError:
-        return None, "notjson", "SCeLE didn't answer the mobile login"
+        return None, "notjson", "E-Learning didn't answer the mobile login"
     if data.get("token"):
         return data["token"], None, None
     return None, data.get("errorcode", "unknown"), data.get("error", "unknown error")
@@ -171,7 +171,7 @@ def web_login(session, username, password):
 
 
 class Client:
-    """Wraps the two ways we can talk to SCeLE.
+    """Wraps the two ways we can talk to E-Learning.
 
     token mode: the mobile app API. Everything works.
     web mode:   the API the website itself uses. Deadlines and courses work,
@@ -199,7 +199,7 @@ class Client:
         if isinstance(out, dict) and out.get("exception"):
             if out.get("errorcode") == "invalidtoken":
                 raise SceleError("Your login expired. Run `scele login` again.")
-            raise SceleError(f"SCeLE said: {out.get('message', out.get('errorcode'))}")
+            raise SceleError(f"E-Learning said: {out.get('message', out.get('errorcode'))}")
         return out
 
     def _ajax(self, fn, params, retry):
@@ -218,14 +218,14 @@ class Client:
                 return self._ajax(fn, params, retry=False)
             if code in ("servicenotavailable", "invalidrecord") or "not available" in exc.get("message", ""):
                 raise NeedsMobileApi(fn)
-            raise SceleError(f"SCeLE said: {exc.get('message', code or 'unknown error')}")
+            raise SceleError(f"E-Learning said: {exc.get('message', code or 'unknown error')}")
         return res.get("data")
 
     def relogin(self):
         user = self.cfg["username"]
         password = keychain_get(user) or os.environ.get("SCELE_PASSWORD")
         if not password:
-            raise SceleError("Your SCeLE session expired. Run `scele login` again.")
+            raise SceleError("Your E-Learning session expired. Run `scele login` again.")
         self.s.cookies.clear()
         sesskey, uid = web_login(self.s, user, password)
         self.cfg.update(sesskey=sesskey, cookies=self.s.cookies.get_dict())
@@ -462,7 +462,7 @@ def cmd_whoami(cli, args):
 def cmd_today(cli, args):
     now = time.time()
     end_of_today = datetime.now(TZ).replace(hour=23, minute=59, second=59).timestamp()
-    with console.status("Checking SCeLE..."):
+    with console.status("Checking E-Learning..."):
         events = get_events(cli, days=14)
         try:
             news = get_news(cli, days=2, limit=3)
@@ -571,7 +571,7 @@ def download(cli, f, dest):
         r.raise_for_status()
         ctype = r.headers.get("content-type", "")
         if "json" in ctype or ("text/html" in ctype and dest.suffix.lower() not in (".html", ".htm")):
-            raise SceleError(f"Couldn't download {dest.name} (SCeLE sent back a page instead of the file).")
+            raise SceleError(f"Couldn't download {dest.name} (E-Learning sent back a page instead of the file).")
         with open(tmp, "wb") as fh:
             for chunk in r.iter_content(65536):
                 fh.write(chunk)
@@ -699,7 +699,7 @@ def cmd_ics(cli, args):
     events = get_events(cli, days=args.days, back_days=0)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//scele-cli//EN",
-             "CALSCALE:GREGORIAN", "X-WR-CALNAME:SCeLE deadlines"]
+             "CALSCALE:GREGORIAN", "X-WR-CALNAME:E-Learning deadlines"]
     for e in events:
         when = datetime.fromtimestamp(e["timesort"], timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         summary = f"[{event_course(e)}] {event_name(e)}"
@@ -741,10 +741,10 @@ def cmd_notify(cli, args):
               if e["timesort"] <= time.time() + args.hours * 3600]
     for e in events[:5]:
         left = rel(e["timesort"])
-        title = "SCeLE: overdue!" if "ago" in left else f"SCeLE: due {left}"
+        title = "E-Learning: overdue!" if "ago" in left else f"E-Learning: due {left}"
         notify(title, event_course(e), event_name(e))
     if len(events) > 5:
-        notify("SCeLE", "", f"...and {len(events) - 5} more. Run `scele` to see everything.")
+        notify("E-Learning", "", f"...and {len(events) - 5} more. Run `scele` to see everything.")
     if not events and args.verbose:
         console.print(f"Nothing due in the next {args.hours} hours.")
 
@@ -797,11 +797,11 @@ def cmd_schedule(args):
 # ---------------------------------------------------------------- entry point
 
 def build_parser():
-    p = argparse.ArgumentParser(prog="scele", description="Your SCeLE, in the terminal. Run with no command for today's dashboard.")
+    p = argparse.ArgumentParser(prog="scele", description="Your E-Learning, in the terminal. Run with no command for today's dashboard.")
     p.add_argument("--version", action="version", version=f"scele {__version__}")
     sub = p.add_subparsers(dest="cmd", metavar="<command>")
 
-    s = sub.add_parser("login", help="log in to SCeLE")
+    s = sub.add_parser("login", help="log in to E-Learning")
     s.add_argument("-u", "--username")
     s.add_argument("--web", action="store_true", help="skip the mobile API and log in like a browser")
     sub.add_parser("logout", help="log out and delete saved login")
@@ -821,7 +821,7 @@ def build_parser():
 
     s = sub.add_parser("sync", help="download course materials (only new or changed files)")
     s.add_argument("course", nargs="?")
-    s.add_argument("--to", default="~/SCeLE", help="where to save (default ~/SCeLE)")
+    s.add_argument("--to", default="~/E-Learning", help="where to save (default ~/E-Learning)")
     s.add_argument("-n", "--dry-run", action="store_true", help="show what would be downloaded")
 
     s = sub.add_parser("news", help="recent course announcements")
@@ -832,7 +832,7 @@ def build_parser():
     s = sub.add_parser("grades", help="grades overview, or one course in detail")
     s.add_argument("course", nargs="?")
 
-    s = sub.add_parser("open", help="open SCeLE, a course, or a numbered item in your browser")
+    s = sub.add_parser("open", help="open E-Learning, a course, or a numbered item in your browser")
     s.add_argument("target", nargs="?")
 
     s = sub.add_parser("ics", help="export deadlines to a calendar file")
@@ -874,17 +874,17 @@ def main(argv=None):
             HANDLERS[args.cmd](get_client(), args)
     except NeedsMobileApi:
         console.print("[yellow]This command needs the mobile API, and you're logged in through the website.[/]\n"
-                      "Try `scele login` again without --web. If SCeLE blocks the mobile login, "
+                      "Try `scele login` again without --web. If E-Learning blocks the mobile login, "
                       "`scele`, `todo`, `courses` and `open` still work.")
         sys.exit(1)
     except SceleError as e:
         console.print(f"[red]{e}[/]")
         sys.exit(1)
     except requests.ConnectionError:
-        console.print("[red]Can't reach SCeLE. Check your internet, or SCeLE might be down.[/]")
+        console.print("[red]Can't reach E-Learning. Check your internet, or E-Learning might be down.[/]")
         sys.exit(1)
     except requests.HTTPError as e:
-        console.print(f"[red]SCeLE returned an error: {e}[/]")
+        console.print(f"[red]E-Learning returned an error: {e}[/]")
         sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(130)

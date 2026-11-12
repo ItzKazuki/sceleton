@@ -29,14 +29,14 @@ function render() {
 
   if (auth.status === 'loggedout') {
     app.innerHTML = `${head}<div class="hello">
-      <h1>Log in to SCeLE first.</h1>
+      <h1>Log in to E-Learning first.</h1>
       <p>Sceleton uses the login in your browser. It never sees your password.</p>
-      <button class="btn primary" data-act="login">${icon('external', 16)}Open SCeLE login</button>
+      <button class="btn primary" data-act="login">${icon('external', 16)}Open E-Learning login</button>
     </div>`;
     return;
   }
   if (!db.events) {
-    app.innerHTML = `${head}<div class="hello"><h1>Checking SCeLE...</h1><p>This only takes a moment the first time.</p></div>`;
+    app.innerHTML = `${head}<div class="hello"><h1>Checking E-Learning...</h1><p>This only takes a moment the first time.</p></div>`;
     return;
   }
 
@@ -62,7 +62,7 @@ function render() {
     </div>` : ''}
     <footer>
       <button class="btn primary" data-act="dash">Open dashboard</button>
-      <button class="btn" data-act="scele">${icon('external', 15)}SCeLE</button>
+      <button class="btn" data-act="scele">${icon('external', 15)}E-Learning</button>
     </footer>
     <div class="stamp">${db.events.at ? `Synced ${esc(rel(db.events.at))}` : ''}</div>`;
 }
@@ -90,7 +90,7 @@ document.addEventListener('click', async (e) => {
   else if (act === 'day') openTab(`${DASH}#/deadlines`);
 });
 
-// Links to SCeLE open in a new tab instead of inside the popup.
+// Links to E-Learning open in a new tab instead of inside the popup.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[target="_blank"]');
   if (a) { e.preventDefault(); openTab(a.href); }

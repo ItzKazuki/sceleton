@@ -1,5 +1,5 @@
 // End-to-end test: loads the dev build into a real Chromium, logs in to the
-// fake SCeLE and checks that every part of Sceleton works. Also saves
+// fake E-Learning and checks that every part of Sceleton works. Also saves
 // screenshots to docs/screenshots.
 //
 //   python3 dev/mock_scele.py &      (or with --limited)
@@ -69,7 +69,7 @@ ok(auth0?.status === 'loggedout', `background knows we are logged out (${auth0?.
 ok(await sw.evaluate(() => chrome.action.getBadgeText({})) === '!', 'badge shows "!" when logged out');
 if (SHOTS && !LIMITED) await welcome.screenshot({ path: join(shots, 'welcome.png') });
 
-// ------------------------------------------------------------ 2. log in on the SCeLE site
+// ------------------------------------------------------------ 2. log in on the E-Learning site
 const scelePage = await ctx.newPage();
 await scelePage.goto(`${MOCK}/login/index.php`);
 await scelePage.fill('#username', 'ahmad.hoesin');
@@ -82,7 +82,7 @@ for (let i = 0; i < 40; i++) {
   await wait(250);
 }
 const { auth, events, courses } = await storage(['auth', 'events', 'courses']);
-ok(auth?.status === 'ok' && auth.name === 'Ahmad Hoesin', `synced after logging in on SCeLE (name: ${auth?.name})`);
+ok(auth?.status === 'ok' && auth.name === 'Ahmad Hoesin', `synced after logging in on E-Learning (name: ${auth?.name})`);
 ok(events?.list?.length === 13, `got all deadlines (${events?.list?.length})`);
 ok(courses?.list?.length === 8, `got all courses (${courses?.list?.length})`);
 ok(events.list.every((e) => e.cmid > 0), 'every deadline knows its activity id');
@@ -212,14 +212,14 @@ await sw.evaluate(() => {
 await app.click('[data-act="dl-course"]');
 await until(async () => (await sw.evaluate(() => self.__asked.length)) >= (LIMITED ? 10 : 22), 10000);
 const asked = await sw.evaluate(() => self.__asked);
-const names = asked.map((o) => o.filename || '(name chosen by SCeLE)');
+const names = asked.map((o) => o.filename || '(name chosen by E-Learning)');
 console.log('       e.g.', names.slice(0, 2).join(' | '));
 ok(asked.length >= (LIMITED ? 10 : 22), `downloaded every file in the course (${asked.length})`);
 if (!LIMITED) {
-  ok(names.some((n) => /^SCeLE\/PBP KI\/Week 2 - Models, views and templates\/Lab 1 starter code\/src\/(views|tests)\.py$/.test(n)), 'files land in Downloads/SCeLE/<course>/<section>/<folder>/...');
-  ok(names.includes('SCeLE/PBP KI/Week 1 - Web and Django basics/W01 Web and Django basics.pdf'), 'slides keep their real file name');
+  ok(names.some((n) => /^E-Learning\/PBP KI\/Week 2 - Models, views and templates\/Lab 1 starter code\/src\/(views|tests)\.py$/.test(n)), 'files land in Downloads/E-Learning/<course>/<section>/<folder>/...');
+  ok(names.includes('E-Learning/PBP KI/Week 1 - Web and Django basics/W01 Web and Django basics.pdf'), 'slides keep their real file name');
 } else {
-  ok(asked.every((o) => !o.filename && /redirect=1/.test(o.url)), 'in HTML mode, files are fetched through the SCeLE file link');
+  ok(asked.every((o) => !o.filename && /redirect=1/.test(o.url)), 'in HTML mode, files are fetched through the E-Learning file link');
 }
 const { downloaded } = await storage('downloaded');
 ok(Object.keys(downloaded || {}).length === asked.length, `remembers what was downloaded (${Object.keys(downloaded || {}).length})`);
@@ -233,7 +233,7 @@ ok(await app.locator('.note-row.unread').count() === 3, 'three unread in the inb
 const [popupTab] = await Promise.all([ctx.waitForEvent('page'), app.click('.note-row.unread >> nth=0')]);
 await popupTab.close();
 await until(async () => (await storage('inbox')).inbox?.unread === 2);
-ok(await app.locator('.note-row.unread').count() === 2 && (await storage('inbox')).inbox?.unread === 2, 'opening a notification marks it read, on SCeLE too');
+ok(await app.locator('.note-row.unread').count() === 2 && (await storage('inbox')).inbox?.unread === 2, 'opening a notification marks it read, on E-Learning too');
 if (SHOTS && !LIMITED) await app.screenshot({ path: join(shots, 'inbox.png'), fullPage: true });
 
 // grades
@@ -288,7 +288,7 @@ await app.click('[data-exp="md"]');
 await app.waitForSelector('.exporter .exp-done', { timeout: 60000 });
 await until(async () => (await app.evaluate(() => window.__saved.length)) >= 1);
 let saved = await app.evaluate(() => window.__saved);
-ok(saved[0]?.name === 'SCeLE/PBP KI/PBP KI context.md', `context.md goes to Downloads/SCeLE/<course> (${saved[0]?.name})`);
+ok(saved[0]?.name === 'E-Learning/PBP KI/PBP KI context.md', `context.md goes to Downloads/E-Learning/<course> (${saved[0]?.name})`);
 ok(Buffer.from(saved[0].bytes).toString('utf8').startsWith('# Platform-Based Programming'), 'the saved file is the same text');
 await app.click('.exporter [data-exp-close]');
 
@@ -301,7 +301,7 @@ ok((await storage('settings')).settings?.exportDetails === false, 'remembers the
 await until(async () => (await app.evaluate(() => window.__saved.length)) >= 2);
 saved = await app.evaluate(() => window.__saved);
 const zipFile = saved[1];
-ok(zipFile?.name === 'SCeLE/PBP KI/PBP KI for Claude.zip', `zip goes to Downloads/SCeLE/<course> (${zipFile?.name})`);
+ok(zipFile?.name === 'E-Learning/PBP KI/PBP KI for Claude.zip', `zip goes to Downloads/E-Learning/<course> (${zipFile?.name})`);
 const zipPath = join(DOWNLOADS, 'export.zip');
 writeFileSync(zipPath, Buffer.from(zipFile.bytes));
 const py = `
@@ -398,7 +398,7 @@ if (SHOTS && !LIMITED) {
 }
 await popup.close();
 
-// ------------------------------------------------------------ 7. on SCeLE itself
+// ------------------------------------------------------------ 7. on E-Learning itself
 const pbpTask = (await storage('events')).events.list.find((e) => e.name === 'Tugas Individu 7');
 await scelePage.goto(pbpTask.url);
 await scelePage.waitForSelector('#sceleton-chip', { timeout: 5000 });
@@ -407,14 +407,14 @@ ok(/\d+h \d\dm \d\ds left/.test(chipText), `countdown on the assignment page ("$
 if (SHOTS && !LIMITED) await scelePage.screenshot({ path: join(shots, 'countdown.png') });
 await app.click('.toggle:has(input[data-setting="darkScele"])');
 await wait(400);
-ok(await scelePage.evaluate(() => document.documentElement.classList.contains('sceleton-dark')), 'dark mode turns on for SCeLE without reloading');
+ok(await scelePage.evaluate(() => document.documentElement.classList.contains('sceleton-dark')), 'dark mode turns on for E-Learning without reloading');
 if (SHOTS && !LIMITED) await scelePage.screenshot({ path: join(shots, 'scele-dark.png') });
 await app.click('.toggle:has(input[data-setting="darkScele"])');
 
 // ------------------------------------------------------------ 8. session ends
 await fetch(`${MOCK}/__dev/logout`, { method: 'POST' });
 await sendFromPage(app, { type: 'refresh' });
-ok((await storage('auth')).auth?.status === 'loggedout', 'notices when the SCeLE session ends');
+ok((await storage('auth')).auth?.status === 'loggedout', 'notices when the E-Learning session ends');
 ok(await sw.evaluate(() => chrome.action.getBadgeText({})) === '!', 'badge goes back to "!"');
 await app.goto(`${APP}#/home`);
 await app.waitForSelector('.hello h1');

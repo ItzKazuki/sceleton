@@ -97,7 +97,7 @@ function sidebar() {
     <div class="side-foot">
       <div class="who">${db.auth?.name ? `<b>${esc(db.auth.name)}</b>` : ''}${esc(syncedText())}</div>
       <button class="icon-btn" data-act="theme" title="${store.isDark(settings) ? 'Switch to light mode' : 'Switch to dark mode'}" aria-label="${store.isDark(settings) ? 'Switch to light mode' : 'Switch to dark mode'}">${icon(store.isDark(settings) ? 'sun' : 'moon', 17)}</button>
-      <button class="icon-btn${ui.syncing ? ' spinning' : ''}" data-act="sync" title="Sync with SCeLE now" aria-label="Sync with SCeLE now">${icon('refresh', 17)}</button>
+      <button class="icon-btn${ui.syncing ? ' spinning' : ''}" data-act="sync" title="Sync with E-Learning now" aria-label="Sync with E-Learning now">${icon('refresh', 17)}</button>
     </div>`;
 }
 
@@ -106,7 +106,7 @@ function sidebar() {
 function errorBanner() {
   const a = db.auth || {};
   if (!a.errorAt || a.errorAt < (db.events?.at || 0)) return '';
-  return `<div class="banner">${icon('bell', 18)}<span class="grow">Couldn't reach SCeLE just now (${esc(a.error || 'unknown error')}). You're seeing what was saved ${esc(rel(db.events?.at || a.errorAt))}.</span><button class="btn small" data-act="sync">Try again</button></div>`;
+  return `<div class="banner">${icon('bell', 18)}<span class="grow">Couldn't reach E-Learning just now (${esc(a.error || 'unknown error')}). You're seeing what was saved ${esc(rel(db.events?.at || a.errorAt))}.</span><button class="btn small" data-act="sync">Try again</button></div>`;
 }
 
 function emptyNote(title, text) {
@@ -116,10 +116,10 @@ function emptyNote(title, text) {
 function helloPage() {
   return `<div class="hello">
     <div class="mark">${logo(56)}</div>
-    <h1>Log in to SCeLE and Sceleton fills itself in.</h1>
-    <p>Sceleton reads SCeLE using the login you already have in this browser. It never sees or stores your password, and everything it saves stays on your computer.</p>
+    <h1>Log in to E-Learning and Sceleton fills itself in.</h1>
+    <p>Sceleton reads E-Learning using the login you already have in this browser. It never sees or stores your password, and everything it saves stays on your computer.</p>
     <div class="hello-actions">
-      <a class="btn primary" href="${esc(scele.urls.login)}" target="_blank" rel="noopener">${icon('external', 16)}Open SCeLE login</a>
+      <a class="btn primary" href="${esc(scele.urls.login)}" target="_blank" rel="noopener">${icon('external', 16)}Open E-Learning login</a>
       <button class="btn" data-act="sync">I'm logged in, check again</button>
     </div>
     <p class="small faint">Once you're in, this page updates by itself.</p>
@@ -175,7 +175,7 @@ function homePage() {
     <div class="cols">
       <section>
         <h2>Up next <span class="faint">${upNext.length}</span><span class="grow"></span><a href="#/deadlines">All deadlines</a></h2>
-        <div class="panel">${upNext.length ? groupedList(upNext, db.done || {}) : emptyNote('Nothing in the next two weeks.', ' New deadlines show up here as soon as they appear on SCeLE.')}</div>
+        <div class="panel">${upNext.length ? groupedList(upNext, db.done || {}) : emptyNote('Nothing in the next two weeks.', ' New deadlines show up here as soon as they appear on E-Learning.')}</div>
       </section>
       <div class="stack">
         <section>
@@ -184,7 +184,7 @@ function homePage() {
         </section>
         <section>
           <h2>Inbox ${unreadCount() ? `<span class="faint">${unreadCount()} unread</span>` : ''}<span class="grow"></span><a href="#/inbox">Open inbox</a></h2>
-          <div class="panel"><ul class="rows">${notes.length ? notes.map(noteRow).join('') : `<li>${emptyNote('No notifications.', ' Announcements and grading updates from SCeLE show up here.')}</li>`}</ul></div>
+          <div class="panel"><ul class="rows">${notes.length ? notes.map(noteRow).join('') : `<li>${emptyNote('No notifications.', ' Announcements and grading updates from E-Learning show up here.')}</li>`}</ul></div>
         </section>
       </div>
     </div>
@@ -313,7 +313,7 @@ function coursePage(id) {
       <div class="actions">
         ${files.length ? `<button class="btn primary" data-act="dl-course" data-id="${id}">${icon('download', 16)}${fresh2dl ? `Download ${fresh2dl === files.length ? 'all' : 'new'} files (${fresh2dl})` : 'Download all again'}</button>` : ''}
         <button class="btn" data-act="export" data-id="${id}" ${content ? '' : 'disabled'}>${icon('export', 16)}Export for Claude</button>
-        <a class="btn" href="${esc(c.url)}" target="_blank" rel="noopener">${icon('external', 16)}Open in SCeLE</a>
+        <a class="btn" href="${esc(c.url)}" target="_blank" rel="noopener">${icon('external', 16)}Open in E-Learning</a>
         <button class="btn ghost${loading ? ' spinning' : ''}" data-act="reload-course" data-id="${id}">${icon('refresh', 16)}Refresh</button>
       </div>
     </header>
@@ -340,7 +340,7 @@ function moduleRow(course, m, isFresh) {
     </div>
     <div class="end">
       ${single || m.modname === 'folder' && m.files.length ? `<button class="icon-btn" data-act="dl-mod" data-mod="${m.id}" title="Download" aria-label="Download ${esc(m.name)}">${icon('download', 17)}</button>` : ''}
-      <a class="icon-btn hover-only" href="${esc(m.url)}" target="_blank" rel="noopener" title="Open in SCeLE" aria-label="Open ${esc(m.name)} in SCeLE">${icon('external', 16)}</a>
+      <a class="icon-btn hover-only" href="${esc(m.url)}" target="_blank" rel="noopener" title="Open in E-Learning" aria-label="Open ${esc(m.name)} in E-Learning">${icon('external', 16)}</a>
     </div>
   </li>`;
 }
@@ -354,8 +354,8 @@ function inboxPage() {
     <h1 class="headline" style="margin-bottom:22px">Inbox</h1>
     <h2>${unreadCount() ? `${unreadCount()} unread` : 'All caught up'}<span class="grow"></span>
       ${unreadCount() ? '<button class="btn small" data-act="read-all">Mark all as read</button>' : ''}
-      <a class="btn small ghost" href="${esc(scele.urls.notifications)}" target="_blank" rel="noopener">${icon('external', 14)}Open on SCeLE</a></h2>
-    <div class="panel"><ul class="rows">${items.length ? items.map(noteRow).join('') : `<li>${emptyNote('No notifications yet.', ' Announcements, forum replies and grading updates from SCeLE land here.')}</li>`}</ul></div>
+      <a class="btn small ghost" href="${esc(scele.urls.notifications)}" target="_blank" rel="noopener">${icon('external', 14)}Open on E-Learning</a></h2>
+    <div class="panel"><ul class="rows">${items.length ? items.map(noteRow).join('') : `<li>${emptyNote('No notifications yet.', ' Announcements, forum replies and grading updates from E-Learning land here.')}</li>`}</ul></div>
   </div>`;
 }
 
@@ -428,7 +428,7 @@ function settingsPage() {
       <div class="setting"><div class="label"><b>Remind me before a deadline</b><span>Pick as many as you like. Reminders come as normal notifications.</span>
         <div class="chips-inline" style="margin-top:10px">${REMINDER_CHOICES.map(([h, l]) => `<button class="chip" data-act="reminder" data-h="${h}" aria-pressed="${settings.reminders.includes(h)}">${l}</button>`).join('')}</div></div></div>
       ${toggle('notifyMaterials', 'New course material', 'Get a notification when a lecturer adds slides, files or assignments.')}
-      ${toggle('notifyInbox', 'SCeLE notifications', 'Announcements, forum replies and grading updates.')}
+      ${toggle('notifyInbox', 'E-Learning notifications', 'Announcements, forum replies and grading updates.')}
     </div>
 
     <h2>Toolbar and deadlines</h2>
@@ -439,9 +439,9 @@ function settingsPage() {
         <div class="chips-inline" style="margin-top:10px">${TYPE_CHOICES.map((t) => `<button class="chip" data-act="hide-type" data-type="${t}" aria-pressed="${settings.hiddenTypes.includes(t)}">${moduleLabel(t)}</button>`).join('')}</div></div></div>
     </div>
 
-    <h2>On the SCeLE website</h2>
+    <h2>On the E-Learning website</h2>
     <div class="panel setting-group">
-      ${toggle('darkScele', 'Dark mode for SCeLE', 'Makes scele.cs.ui.ac.id dark. Pictures stay close to their normal colours.')}
+      ${toggle('darkScele', 'Dark mode for E-Learning', 'Makes elearning.pnj.ac.id dark. Pictures stay close to their normal colours.')}
       ${toggle('countdown', 'Countdown on assignment pages', 'Shows a live timer in the corner of assignment and quiz pages.')}
     </div>
 
@@ -455,13 +455,13 @@ function settingsPage() {
 
     <h2>Account and data</h2>
     <div class="panel setting-group">
-      <div class="setting"><div class="label"><b>${db.auth?.name ? esc(db.auth.name) : 'SCeLE account'}</b><span>${loggedOut() ? 'Not logged in.' : `Logged in through your browser. ${esc(syncedText())}.`}</span></div>
+      <div class="setting"><div class="label"><b>${db.auth?.name ? esc(db.auth.name) : 'E-Learning account'}</b><span>${loggedOut() ? 'Not logged in.' : `Logged in through your browser. ${esc(syncedText())}.`}</span></div>
         <button class="btn small" data-act="sync">${icon('refresh', 15)}Sync now</button></div>
       <div class="setting"><div class="label"><b>Keyboard shortcuts</b><span>${isMac ? '⌘' : 'Ctrl'} K searches everything. Alt Shift S opens the popup, Alt Shift D opens this dashboard. Change them at ${isEdge ? 'edge' : 'chrome'}://extensions/shortcuts.</span></div></div>
       <div class="setting"><div class="label"><b>Clear saved data</b><span>Forgets deadlines, course pages, ticked off items and download history on this computer. Your settings stay.</span></div>
         <button class="btn small" data-act="clear-data">Clear</button></div>
     </div>
-    <p class="faint" style="font-size:var(--t-s)">Sceleton ${chrome.runtime.getManifest().version}. Not made by or affiliated with Universitas Indonesia.</p>
+    <p class="faint" style="font-size:var(--t-s)">Sceleton ${chrome.runtime.getManifest().version}. Not made by or affiliated with Jakarta State Polytechnic.</p>
   </div>`;
 }
 
@@ -605,7 +605,7 @@ function searchIndex() {
   for (const [key, label, ic] of PAGES) {
     items.push({ kind: 'Go to', title: label, icon: ic, run: () => { location.hash = `#/${key}`; } });
   }
-  items.push({ kind: 'Action', title: 'Sync with SCeLE now', icon: 'refresh', run: () => syncNow(true) });
+  items.push({ kind: 'Action', title: 'Sync with E-Learning now', icon: 'refresh', run: () => syncNow(true) });
   items.push({ kind: 'Action', title: 'Choose which courses to track', icon: 'courses', run: openCoursePicker });
   items.push({ kind: 'Action', title: 'Add deadlines to calendar', sub: 'Downloads an .ics file', icon: 'calendar', run: exportIcs });
   items.push({ kind: 'Action', title: 'Export my semester for Claude', sub: 'What is due and your grades, as text', icon: 'export', run: () => openExport(null) });
@@ -614,7 +614,7 @@ function searchIndex() {
     items.push({ kind: 'Action', title: `Export ${courseById(here.id).shortname} for Claude`, sub: 'Deadlines, grades, announcements and files', icon: 'export', boost: 6, run: () => openExport(here.id) });
   }
   items.push({ kind: 'Action', title: store.isDark(settings) ? 'Switch Sceleton to light mode' : 'Switch Sceleton to dark mode', icon: store.isDark(settings) ? 'sun' : 'moon', run: () => store.toggleTheme(settings) });
-  items.push({ kind: 'Action', title: settings.darkScele ? 'Turn off dark mode for SCeLE' : 'Turn on dark mode for SCeLE', icon: 'moon', run: () => store.saveSettings({ darkScele: !settings.darkScele }) });
+  items.push({ kind: 'Action', title: settings.darkScele ? 'Turn off dark mode for E-Learning' : 'Turn on dark mode for E-Learning', icon: 'moon', run: () => store.saveSettings({ darkScele: !settings.darkScele }) });
   for (const c of courses()) {
     items.push({ kind: 'Course', title: c.fullname, sub: c.shortname, courseId: c.id, icon: 'courses', run: () => { location.hash = `#/courses/${c.id}`; } });
     if (isHidden(c.id)) continue;
@@ -731,10 +731,10 @@ function openCoursePicker() {
 
 // ------------------------------------------------------------ export for Claude
 
-// Saves a file we built ourselves into Downloads/SCeLE/<course>/.
+// Saves a file we built ourselves into Downloads/E-Learning/<course>/.
 async function saveBlob(blob, name, folder) {
   const url = URL.createObjectURL(blob);
-  const filename = [safeName(settings.downloadFolder || 'SCeLE'), folder && safeName(folder), name].filter(Boolean).join('/');
+  const filename = [safeName(settings.downloadFolder || 'E-Learning'), folder && safeName(folder), name].filter(Boolean).join('/');
   const downloadId = await chrome.downloads.download({ url, filename, conflictAction: 'uniquify' });
   setTimeout(() => URL.revokeObjectURL(url), 5 * 60 * 1000);
   return { path: filename, downloadId };
@@ -865,7 +865,7 @@ function openExport(courseId = null) {
       console.warn('Sceleton: export failed', err);
       finish({
         title: "That didn't work",
-        lines: [err instanceof scele.NotLoggedIn ? 'You are logged out of SCeLE. Log in and try again.' : `${err.message || 'Something went wrong.'}`],
+        lines: [err instanceof scele.NotLoggedIn ? 'You are logged out of E-Learning. Log in and try again.' : `${err.message || 'Something went wrong.'}`],
         again: true,
       });
     }

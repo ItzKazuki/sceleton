@@ -1,7 +1,7 @@
 // Packs a course (or your whole semester) into something you can hand to Claude.
 //
 // The dashboard calls three things here, in this order:
-//   1. collectCourse()   reads the extra stuff SCeLE has (grades, announcements,
+//   1. collectCourse()   reads the extra stuff E-Learning has (grades, announcements,
 //                        assignment descriptions) on top of what Sceleton saved already
 //   2. fetchFiles()      downloads the course files, only for the .zip option
 //   3. renderContext()   writes it all up as one markdown file
@@ -186,21 +186,21 @@ export function renderContext(m, { paths = null, skipped = [] } = {}) {
   const L = [];
   L.push(`# ${c.fullname}`, '');
   L.push(`- Course code: ${c.shortname}`);
-  L.push(`- SCeLE page: <${c.url}>`);
-  L.push(`- Exported from SCeLE with Sceleton on ${when(m.at)}`);
+  L.push(`- E-Learning page: <${c.url}>`);
+  L.push(`- Exported from E-Learning with Sceleton on ${when(m.at)}`);
   if (m.total) L.push(`- My grade so far: ${m.total}`);
-  L.push('', 'This is my own course material and progress, copied from SCeLE. Use it as background when you help me study, plan my work or understand the course. If something I ask about is not here, say so instead of guessing dates or grades.', '');
+  L.push('', 'This is my own course material and progress, copied from E-Learning. Use it as background when you help me study, plan my work or understand the course. If something I ask about is not here, say so instead of guessing dates or grades.', '');
 
   const upcoming = m.events.filter((e) => e.time >= t).sort((a, b) => a.time - b.time);
   const recent = m.events.filter((e) => e.time < t).sort((a, b) => b.time - a.time);
   L.push('## Deadlines', '');
-  if (!upcoming.length && !recent.length) L.push('SCeLE shows no deadlines for this course right now.', '');
+  if (!upcoming.length && !recent.length) L.push('E-Learning shows no deadlines for this course right now.', '');
   if (upcoming.length) L.push('### Coming up', '', ...upcoming.map((e) => deadlineLine(e, m.done)), '');
   if (recent.length) L.push('### Recently passed (last 14 days)', '', ...recent.map((e) => deadlineLine(e, m.done)), '');
 
   const briefEvents = m.events.filter((e) => m.briefs[e.id]);
   if (briefEvents.length) {
-    L.push('## Assignment descriptions', '', 'Copied from each assignment page on SCeLE.', '');
+    L.push('## Assignment descriptions', '', 'Copied from each assignment page on E-Learning.', '');
     for (const e of briefEvents) L.push(`### ${e.name}`, '', `Due ${when(e.time)}`, '', m.briefs[e.id], '');
   }
 
@@ -224,7 +224,7 @@ export function renderContext(m, { paths = null, skipped = [] } = {}) {
       L.push(`### ${a.title}`, '', ...(meta ? [meta, ''] : []), a.text, '');
     }
   } else if (m.notifications.length) {
-    L.push('## Recent SCeLE notifications that mention this course', '');
+    L.push('## Recent E-Learning notifications that mention this course', '');
     for (const n of m.notifications) L.push(`### ${n.subject}`, '', dayOnly(n.time), '', String(n.text).replace(/<[^>]+>/g, '').trim(), '');
   }
 
@@ -270,7 +270,7 @@ export function renderContext(m, { paths = null, skipped = [] } = {}) {
 // The whole semester in one page: what's due and how you're doing in each course.
 export function renderSemester({ courses, db, settings }) {
   const t = now();
-  const L = ['# My semester so far', '', `Exported from SCeLE with Sceleton on ${when(t)}.`, '',
+  const L = ['# My semester so far', '', `Exported from E-Learning with Sceleton on ${when(t)}.`, '',
     'These are the courses I am actually taking, with my grade so far and what is due next. Use it as background when you help me plan my time.', ''];
   const events = (db.events?.list || []).filter((e) => !settings.hiddenTypes.includes(e.modname));
   const ids = new Set(courses.map((c) => c.id));
@@ -296,7 +296,7 @@ export function renderSemester({ courses, db, settings }) {
 export function claudeMdFor(course, at) {
   return `# ${course.shortname}: ${course.fullname}
 
-This folder is one of my university courses, exported from SCeLE with Sceleton on ${dayOnly(at)}.
+This folder is one of my university courses, exported from E-Learning with Sceleton on ${dayOnly(at)}.
 
 - Read @context.md first. It has my deadlines, grades, announcements and a list of all course material.
 - The lecture slides and other files are in \`files/\`.

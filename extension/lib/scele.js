@@ -1,8 +1,8 @@
-// Talks to SCeLE using the login you already have in this browser.
+// Talks to E-Learning using the login you already have in this browser.
 //
-// SCeLE is a Moodle site. When you're logged in, every page has a "sesskey"
+// E-Learning is a Moodle site. When you're logged in, every page has a "sesskey"
 // in it. With that key (and your browser's cookies) we can call the same
-// JSON API that SCeLE's own pages use: /lib/ajax/service.php.
+// JSON API that E-Learning's own pages use: /lib/ajax/service.php.
 //
 // Not every function is allowed through that API on every Moodle site, so
 // the course page and grades also have a backup plan: read the normal HTML
@@ -13,7 +13,7 @@ import { SCELE_URL } from './config.js';
 import { decode, cmidFromUrl, htmlToText } from './util.js';
 
 export class NotLoggedIn extends Error {
-  constructor() { super('Not logged in to SCeLE'); this.name = 'NotLoggedIn'; }
+  constructor() { super('Not logged in to E-Learning'); this.name = 'NotLoggedIn'; }
 }
 export class Unavailable extends Error {
   constructor(fn) { super(`${fn} is not available here`); this.name = 'Unavailable'; }
@@ -31,12 +31,12 @@ export function setHtmlParser(fn) { htmlParser = fn; }
 
 async function get(path) {
   const r = await fetch(SCELE_URL + path, { credentials: 'include' });
-  if (!r.ok) throw new Error(`SCeLE returned ${r.status} for ${path}`);
+  if (!r.ok) throw new Error(`E-Learning returned ${r.status} for ${path}`);
   if (/\/login\/index\.php/.test(r.url)) throw new NotLoggedIn();
   return r.text();
 }
 
-// Reads the sesskey and who you are from your SCeLE home page.
+// Reads the sesskey and who you are from your E-Learning home page.
 export function parseSession(html) {
   const key = html.match(/"sesskey"\s*:\s*"([^"]+)"/);
   if (!key) return null;
@@ -68,7 +68,7 @@ export async function call(methodname, args = {}, retry = true) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify([{ index: 0, methodname, args }]),
   });
-  if (!r.ok) throw new Error(`SCeLE returned ${r.status}`);
+  if (!r.ok) throw new Error(`E-Learning returned ${r.status}`);
   const out = await r.json();
   const res = Array.isArray(out) ? out[0] : out;
   if (res && res.error) {
@@ -82,7 +82,7 @@ export async function call(methodname, args = {}, retry = true) {
     if (code === 'servicenotavailable' || /not available|tidak tersedia/i.test(ex.message || '')) {
       throw new Unavailable(methodname);
     }
-    throw new Error(decode(ex.message) || code || 'SCeLE returned an error');
+    throw new Error(decode(ex.message) || code || 'E-Learning returned an error');
   }
   return res ? res.data : null;
 }
@@ -106,7 +106,7 @@ function normalizeEvent(e) {
   };
 }
 
-// Everything in your SCeLE timeline from `daysBack` ago to `daysAhead` from now.
+// Everything in your E-Learning timeline from `daysBack` ago to `daysAhead` from now.
 export async function getEvents(daysAhead = 60, daysBack = 14) {
   const t = Math.floor(Date.now() / 1000);
   const all = [];

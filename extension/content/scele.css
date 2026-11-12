@@ -1,4 +1,4 @@
-/* Dark mode for SCeLE: flip every colour, then flip pictures back so they look normal. */
+/* Dark mode for E-Learning: flip every colour, then flip pictures back so they look normal. */
 html.sceleton-dark {
   filter: invert(1) hue-rotate(180deg);
   background: #fff !important;

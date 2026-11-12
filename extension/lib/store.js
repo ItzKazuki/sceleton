@@ -16,13 +16,13 @@
 export const DEFAULT_SETTINGS = {
   reminders: [24, 3],          // hours before a deadline to send a notification
   notifyMaterials: true,       // notify when a lecturer adds something to a course
-  notifyInbox: true,           // notify for new SCeLE notifications (announcements, grades, ...)
+  notifyInbox: true,           // notify for new E-Learning notifications (announcements, grades, ...)
   badge: '24h',                // what the toolbar number counts: '24h', '3d' or 'off'
   hiddenTypes: ['attendance'], // deadline types you never want to see
-  darkScele: false,            // dark mode on scele.cs.ui.ac.id itself
+  darkScele: false,            // dark mode on elearning.pnj.ac.id itself
   countdown: true,             // live countdown on assignment and quiz pages
   theme: 'auto',               // 'auto', 'light' or 'dark' for Sceleton's own pages
-  downloadFolder: 'SCeLE',     // inside your Downloads folder
+  downloadFolder: 'E-Learning',     // inside your Downloads folder
   hiddenCourses: [],           // courses you're enrolled in but not really taking
   coursesChosen: false,        // has the "pick your courses" tip been dealt with?
   exportDetails: true,         // "Export for Claude" also reads assignment descriptions and pages
