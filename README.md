@@ -2,7 +2,7 @@
 
 <h1 align="center">Sceleton</h1>
 
-<p align="center">A browser extension that makes E-Learning (Fasilkom UI's Moodle) actually tell you what's due.<br>Works in Microsoft Edge and Google Chrome.</p>
+<p align="center">A browser extension that makes E-Learning (Jakarta State Polytechnic's Moodle) actually tell you what's due.<br>Works in Microsoft Edge and Google Chrome.</p>
 
 <p align="center"><img src="docs/screenshots/home.png" alt="Sceleton dashboard showing what's due today, a two week overview and new course material" width="860"></p>
 
@@ -116,7 +116,7 @@ cd dev && npm install && bash test.sh
 
 ## Notes
 
-- This is a student project. It is not made by, endorsed by or affiliated with Jakarta State Polytechnic or Fasilkom UI.
+- This is a student project. It is not made by, endorsed by or affiliated with Jakarta State Polytechnic or Jakarta State Polytechnic.
 - If E-Learning changes how its pages look, the HTML fallbacks might need updating. Issues and pull requests are welcome.
 
 ## License

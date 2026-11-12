@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scele: a terminal companion for E-Learning (Fasilkom UI's Moodle).
+scele: a terminal companion for E-Learning (Jakarta State Polytechnic's Moodle).
 
 Run `scele` with no arguments for today's dashboard, or `scele --help`
 to see every command.
